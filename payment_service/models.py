@@ -7,7 +7,7 @@ class Payment(models.Model):
         ('shipped', 'Shipped'),
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled'),
-        ('paid', 'Paid'),  # Add this line
+        ('paid', 'Paid'),
     ]
     order = models.IntegerField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
