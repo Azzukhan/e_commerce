@@ -19,21 +19,35 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker images for authenticate_service
+      - name: Build and push Docker images for authentication_service
         run: |
-          docker build -t azzu097/authenticate_service:latest ./authenticate_service
-          docker push azzu097/authenticate_service:latest
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t azzu097/authentication_service:latest ./authentication_service
+          docker push azzu097/authentication_service:latest
 
-      - name: Build and push Docker images for another_service
+      - name: Build and push Docker images for product_service
         run: |
-          docker build -t azzu097/another_service:latest ./another_service
-          docker push azzu097/another_service:latest
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t azzu097/product_service:latest ./product_service
+          docker push azzu097/product_service:latest
+
+      - name: Build and push Docker images for order_service
+        run: |
+          docker build -t azzu097/order_service:latest ./order_service
+          docker push azzu097/order_service:latest
+
+      - name: Build and push Docker images for payment_service
+        run: |
+          docker build -t azzu097/payment_service:latest ./payment_service
+          docker push azzu097/payment_service:latest
+
+      - name: Build and push Docker images for prometheus
+        run: |
+          docker build -t azzu097/prometheus:latest ./prometheus
+          docker push azzu097/prometheus:latest
+
+      - name: Build and push Docker images for grafana
+        run: |
+          docker build -t azzu097/grafana:latest ./grafana
+          docker push azzu097/grafana:latest
 
       - name: Deploy to production
         run: |
