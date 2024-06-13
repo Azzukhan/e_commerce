@@ -1,4 +1,3 @@
-# product_service/views.py
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,6 +9,10 @@ from .permissions import IsAdminOrReadOnly
 from ratelimit import limits
 
 class ProductListCreateView(generics.ListCreateAPIView):
+    """
+    View to list all products or create a new product.
+    Admin users can create new products, while others have read-only access.
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly, permissions.IsAuthenticated]
@@ -32,6 +35,10 @@ class ProductListCreateView(generics.ListCreateAPIView):
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
 class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View to retrieve, update, or delete a product.
+    Admin users can perform all actions, while others have read-only access.
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly, permissions.IsAuthenticated]
@@ -56,6 +63,9 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateInventoryView(APIView):
+    """
+    View to update the inventory of a specific product.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     FIFTEEN_MINUTES = 900

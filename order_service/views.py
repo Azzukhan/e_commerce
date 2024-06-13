@@ -7,9 +7,13 @@ from .models import Order
 from .serializers import OrderSerializer
 from ratelimit import limits
 
+# Set up logging
 logger = logging.getLogger(__name__)
 
 class OrderCreateView(generics.CreateAPIView):
+    """
+    View to create a new order.
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -18,6 +22,12 @@ class OrderCreateView(generics.CreateAPIView):
 
     @limits(calls=15, period=FIFTEEN_MINUTES)
     def perform_create(self, serializer):
+        """
+        Perform the creation of an order, including inventory updates and payment creation.
+
+        Args:
+            serializer (OrderSerializer): The order serializer instance.
+        """
         try:
             order = serializer.save(customer=self.request.user)
             order_total = self.calculate_order_total(serializer.validated_data)
@@ -28,6 +38,15 @@ class OrderCreateView(generics.CreateAPIView):
             return Response({"error": "Failed to create order"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def calculate_order_total(self, order_data):
+        """
+        Calculate the total cost of the order.
+
+        Args:
+            order_data (dict): Data of the order.
+
+        Returns:
+            float: The total cost of the order.
+        """
         items = order_data.get('items', [])
         total = 0
 
@@ -39,6 +58,15 @@ class OrderCreateView(generics.CreateAPIView):
         return total
 
     def update_product_inventory(self, order_data):
+        """
+        Update the inventory for products in the order.
+
+        Args:
+            order_data (dict): Data of the order.
+
+        Raises:
+            Exception: If the inventory update fails.
+        """
         product_service_url = settings.PRODUCT_SERVICE_URL
 
         for item in order_data.get('items', []):
@@ -65,6 +93,16 @@ class OrderCreateView(generics.CreateAPIView):
                 raise Exception("Failed to update inventory due to unknown error")
 
     def create_payment(self, order_id, amount):
+        """
+        Create a payment for the order.
+
+        Args:
+            order_id (int): The ID of the order.
+            amount (float): The total amount of the order.
+
+        Raises:
+            Exception: If the payment creation fails.
+        """
         payment_service_url = settings.PAYMENT_SERVICE_URL
         payload = {
             'order': order_id,
@@ -87,22 +125,36 @@ class OrderCreateView(generics.CreateAPIView):
             logger.error(f'Other error occurred: {err}')
             raise Exception("Failed to create payment due to unknown error")
 
-
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View to retrieve, update, or delete an order.
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class OrderUpdateView(generics.UpdateAPIView):
+    """
+    View to update an order.
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class OrderListView(generics.ListAPIView):
+    """
+    View to list all orders for the authenticated user.
+    """
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        """
+        Get the list of orders for the authenticated user.
+
+        Returns:
+            QuerySet: A queryset of the user's orders.
+        """
         user = self.request.user
         try:
             return Order.objects.filter(customer=user)

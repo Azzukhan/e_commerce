@@ -2,14 +2,21 @@ from rest_framework import serializers
 from .models import Order, OrderItem
 import logging
 
+# Set up logging
 logger = logging.getLogger(__name__)
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    """
+    Serializer for individual order items.
+    """
     class Meta:
         model = OrderItem
         fields = ['product', 'quantity', 'price']
 
 class OrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for orders, including nested order items.
+    """
     items = OrderItemSerializer(many=True)
 
     class Meta:
@@ -18,8 +25,17 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['customer', 'id', 'created_at', 'updated_at']
 
     def create(self, validated_data):
+        """
+        Create an order along with its items.
+
+        Args:
+            validated_data (dict): Validated data for the order and items.
+
+        Returns:
+            Order: The created order instance.
+        """
         items_data = validated_data.pop('items', [])  # Default to empty list if 'items' not provided
-        order = Order.objects.create(**validated_data)  # Remove 'customer' from here
+        order = Order.objects.create(**validated_data)
         for item_data in items_data:
             try:
                 product = item_data.pop('product')
@@ -33,6 +49,16 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
     def update(self, instance, validated_data):
+        """
+        Update an order and its items.
+
+        Args:
+            instance (Order): The existing order instance.
+            validated_data (dict): Validated data for the order and items.
+
+        Returns:
+            Order: The updated order instance.
+        """
         items_data = validated_data.pop('items', None)  # Check if 'items' exists
         instance.status = validated_data.get('status', instance.status)
         instance.save()

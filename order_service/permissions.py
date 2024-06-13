@@ -1,5 +1,3 @@
-# permissions.py in order_service
-
 from rest_framework import permissions
 
 class IsOwnerOrAdmin(permissions.BasePermission):

@@ -1,109 +1,109 @@
-version: '3.8'
+version: '3.8'  # Specifies the version of the Docker Compose file format.
 
 services:
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Afjal
+  db:  # Service for PostgreSQL database.
+    image: postgres:13  # Uses the official PostgreSQL image version 13.
+    environment:  # Environment variables for PostgreSQL configuration.
+      POSTGRES_DB: postgres  # Default database name.
+      POSTGRES_USER: postgres  # Default database user.
+      POSTGRES_PASSWORD: Afjal  # Password for the database user.
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Exposes PostgreSQL port 5432.
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Mounts a volume for persistent data storage.
 
-  authentication_services:
+  authentication_services:  # Service for the authentication component of the application.
     build:
-      context: .
-    environment:
+      context: .  # Builds the image from the current directory.
+    environment:  # Environment variables for Django settings and database configuration.
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Afjal
-      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
+      - POSTGRES_HOST=db  # Hostname of the database service.
     volumes:
-      - .:/app
+      - .:/app  # Mounts the current directory to /app inside the container.
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Exposes port 8000 for the authentication service.
     depends_on:
-      - db
+      - db  # Specifies that the db service must be started before this service.
 
-  product_service:
+  product_service:  # Service for the product component of the application.
     build:
-      context: .
-    environment:
+      context: .  # Builds the image from the current directory.
+    environment:  # Environment variables for Django settings and database configuration.
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Afjal
-      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
+      - POSTGRES_HOST=db  # Hostname of the database service.
     volumes:
-      - .:/app
+      - .:/app  # Mounts the current directory to /app inside the container.
     ports:
-      - "8001:8000"
+      - "8001:8000"  # Exposes port 8001 for the product service.
     depends_on:
-      - db
+      - db  # Specifies that the db service must be started before this service.
 
-  order_service:
+  order_service:  # Service for the order component of the application.
     build:
-      context: .
-    environment:
+      context: .  # Builds the image from the current directory.
+    environment:  # Environment variables for Django settings and database configuration.
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Afjal
-      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
+      - POSTGRES_HOST=db  # Hostname of the database service.
     volumes:
-      - .:/app
+      - .:/app  # Mounts the current directory to /app inside the container.
     ports:
-      - "8002:8000"
+      - "8002:8000"  # Exposes port 8002 for the order service.
     depends_on:
-      - db
+      - db  # Specifies that the db service must be started before this service.
 
-  payment_service:
+  payment_service:  # Service for the payment component of the application.
     build:
-      context: .
-    environment:
+      context: .  # Builds the image from the current directory.
+    environment:  # Environment variables for Django settings and database configuration.
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Afjal
-      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
+      - POSTGRES_HOST=db  # Hostname of the database service.
     volumes:
-      - .:/app
+      - .:/app  # Mounts the current directory to /app inside the container.
     ports:
-      - "8003:8000"
+      - "8003:8000"  # Exposes port 8003 for the payment service.
     depends_on:
-      - db
+      - db  # Specifies that the db service must be started before this service.
 
-  prometheus:
-    image: prom/prometheus:v2.30.0
-    container_name: prometheus
+  prometheus:  # Service for Prometheus monitoring.
+    image: prom/prometheus:v2.30.0  # Uses the Prometheus image version 2.30.0.
+    container_name: prometheus  # Sets the container name to 'prometheus'.
     ports:
-      - "9090:9090"
+      - "9090:9090"  # Exposes port 9090 for Prometheus web interface.
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus
+      - ./monitoring/prometheus:/etc/prometheus  # Mounts local directory to Prometheus configuration directory.
     networks:
-      - monitoring
-    environment:
-      - GRAFANA_CLOUD_API_TOKEN=your_actual_token_here
+      - monitoring  # Connects to the 'monitoring' network.
+    environment:  # Environment variables for Prometheus.
+      - GRAFANA_CLOUD_API_TOKEN=your_actual_token_here  # Token for Grafana Cloud integration (example value).
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--config.file=/etc/prometheus/prometheus.yml'  # Command to specify the Prometheus configuration file.
 
-  grafana:
-    image: grafana/grafana:8.0.6
-    container_name: grafana
+  grafana:  # Service for Grafana dashboards.
+    image: grafana/grafana:8.0.6  # Uses the Grafana image version 8.0.6.
+    container_name: grafana  # Sets the container name to 'grafana'.
     ports:
-      - "4000:3000"
+      - "4000:3000"  # Exposes port 4000 for Grafana web interface (mapped to container port 3000).
     networks:
-      - monitoring
+      - monitoring  # Connects to the 'monitoring' network.
     volumes:
-      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources  # Mounts local datasource provisioning directory.
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards  # Mounts local dashboard provisioning directory.
 
 networks:
-  monitoring:
-    driver: bridge
+  monitoring:  # Defines the 'monitoring' network.
+    driver: bridge  # Uses the bridge driver for network communication.
 
 volumes:
-  postgres_data:
+  postgres_data:  # Defines the volume for PostgreSQL data storage.
