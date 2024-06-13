@@ -27,10 +27,8 @@ jobs:
           docker build -t azzu097/e_commerce_app:latest .
           docker push azzu097/e_commerce_app:latest
 
-      - name: Deploy services
+      - name: Deploy with Docker Compose
         run: |
-          docker-compose down
-          docker-compose pull
           docker-compose up -d
         env:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}

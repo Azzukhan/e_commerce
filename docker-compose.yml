@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:13
@@ -11,7 +13,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   authentication_services:
-    image: azzu097/e_commerce_app:latest
+    build:
+      context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -23,7 +26,8 @@ services:
       - db
 
   product_service:
-    image: azzu097/e_commerce_app:latest
+    build:
+      context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -35,7 +39,8 @@ services:
       - db
 
   order_service:
-    image: azzu097/e_commerce_app:latest
+    build:
+      context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -47,7 +52,8 @@ services:
       - db
 
   payment_service:
-    image: azzu097/e_commerce_app:latest
+    build:
+      context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
