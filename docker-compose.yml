@@ -79,7 +79,6 @@ services:
       - GRAFANA_CLOUD_API_TOKEN=your_actual_token_here
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-    restart: always  # Ensure Prometheus restarts on failure or restarts
 
   grafana:
     image: grafana/grafana:8.0.6
@@ -91,9 +90,6 @@ services:
     volumes:
       - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
-    restart: always  # Ensure Grafana restarts on failure or restarts
 
 networks:
   monitoring:
