@@ -11,9 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   authentication_services:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: azzu097/e_commerce_app:latest
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -25,9 +23,7 @@ services:
       - db
 
   product_service:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: azzu097/e_commerce_app:latest
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -39,9 +35,7 @@ services:
       - db
 
   order_service:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: azzu097/e_commerce_app:latest
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
@@ -53,9 +47,7 @@ services:
       - db
 
   payment_service:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: azzu097/e_commerce_app:latest
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
       - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db

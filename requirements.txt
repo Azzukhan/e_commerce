@@ -4,13 +4,14 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 cryptography==42.0.8
 defusedxml==0.8.0rc2
-Django==4.2.13
+Django==3.2.8
+djangorestframework==3.12.4
+psycopg2-binary==2.9.9
 django-cacheops==7.0.2
 django-filter==24.2
 django-prometheus==2.3.1
 django-ratelimit==4.1.0
 django-redis==5.4.0
-djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
 funcy==2.0
 git-filter-repo==2.38.0
@@ -21,7 +22,6 @@ packaging==24.1
 pillow==10.3.0
 prometheus_client==0.20.0
 psycopg==3.1.19
-psycopg2==2.9.9
 pycparser==2.22
 PyJWT==2.8.0
 python3-openid==3.2.0

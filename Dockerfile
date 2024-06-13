@@ -1,21 +1,23 @@
-# Unified Dockerfile for all services
+# Use the official Python image from the Docker Hub
 FROM python:3.9-slim
 
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt and install dependencies
+# Copy the requirements file into the container
 COPY requirements.txt .
 
-RUN apt-get update && \
-    apt-get install -y build-essential libpq-dev && \
-    pip install --no-cache-dir -r requirements.txt && \
-    apt-get clean
+# Install the required dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the source code
+# Copy the rest of the application code into the container
 COPY . .
 
-# Ensure gunicorn is installed
-RUN pip install gunicorn
+# Expose the port the app runs on
+EXPOSE 8000
 
-# Set the default command to run the Django server using gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "e_commerce_app.wsgi:application"]
+# Set the environment variable for Django settings
+ENV DJANGO_SETTINGS_MODULE=e_commerce_app.settings
+
+# Run the application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
