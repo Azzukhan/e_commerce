@@ -5,7 +5,7 @@ charset-normalizer==3.3.2
 cryptography==42.0.8
 defusedxml==0.8.0rc2
 Django==4.2
-djangorestframework==3.12.4
+djangorestframework==3.14
 psycopg2-binary==2.9.9
 django-cacheops==7.0.2
 django-filter==24.2

@@ -26,29 +26,28 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your_default_secret_key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 if 'DOCKER_CONTAINER' in os.environ:
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('POSTGRES_DB', 'postgres'),
             'USER': os.getenv('POSTGRES_USER', 'postgres'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'Afjal'),
-            'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Make sure it's 'localhost' if local
+            'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Make sure it's 'db' as per docker-compose.yml
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
         }
     }
-
 else:
+    # Use localhost configuration for local development
     DATABASES = {
         'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('POSTGRES_DB', 'postgres'),
             'USER': os.getenv('POSTGRES_USER', 'postgres'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'Afjal'),
             'HOST': os.getenv('POSTGRES_HOST', 'localhost'),  # Make sure it's 'localhost' if local
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
-            }
         }
+    }
 
 ALLOWED_HOSTS = ['*']
 

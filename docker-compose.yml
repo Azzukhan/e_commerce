@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: e_commerce_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Afjal
     ports:
       - "5432:5432"
     volumes:
@@ -17,7 +17,10 @@ services:
       context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
-      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Afjal
+      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
     volumes:
       - .:/app
     ports:
@@ -30,7 +33,10 @@ services:
       context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
-      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Afjal
+      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
     volumes:
       - .:/app
     ports:
@@ -43,7 +49,10 @@ services:
       context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
-      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Afjal
+      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
     volumes:
       - .:/app
     ports:
@@ -56,7 +65,10 @@ services:
       context: .
     environment:
       - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
-      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Afjal
+      - POSTGRES_HOST=db  # Ensure this matches the service name in docker-compose.yml
     volumes:
       - .:/app
     ports:
