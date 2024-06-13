@@ -1,0 +1,18 @@
+# prometheus/prometheus.yml
+global:
+  scrape_interval: 60s
+
+remote_write:
+  - url: https://prometheus-prod-43-prod-ap-south-1.grafana.net/api/prom/push
+    basic_auth:
+      username: 1630743
+      password: ${GRAFANA_CLOUD_API_TOKEN}
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'django'
+    static_configs:
+      - targets: ['localhost:8000']  # Port where your Django metrics are exposed

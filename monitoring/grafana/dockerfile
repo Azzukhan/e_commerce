@@ -1,0 +1,5 @@
+FROM grafana/grafana:8.0.6
+
+# Copy datasources and dashboards provisioning files
+COPY provisioning/datasources /etc/grafana/provisioning/datasources
+COPY provisioning/dashboards /etc/grafana/provisioning/dashboards

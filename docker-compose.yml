@@ -1,0 +1,103 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: e_commerce_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  authentication_services:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
+      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  product_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
+      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+
+  order_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
+      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+    volumes:
+      - .:/app
+    ports:
+      - "8002:8000"
+    depends_on:
+      - db
+
+  payment_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=e_commerce_app.settings
+      - DATABASE_URL=postgres://user:password@db:5432/e_commerce_db
+    volumes:
+      - .:/app
+    ports:
+      - "8003:8000"
+    depends_on:
+      - db
+
+  prometheus:
+    image: prom/prometheus:v2.30.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+    networks:
+      - monitoring
+    environment:
+      - GRAFANA_CLOUD_API_TOKEN=your_actual_token_here
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always  # Ensure Prometheus restarts on failure or restarts
+
+  grafana:
+    image: grafana/grafana:8.0.6
+    container_name: grafana
+    ports:
+      - "4000:3000"
+    networks:
+      - monitoring
+    volumes:
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    restart: always  # Ensure Grafana restarts on failure or restarts
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,61 @@
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+
+dashboards:
+  - name: 'Default Dashboard'
+    uid: 'default-dashboard'
+    editable: true
+    gnetId: null
+    revision: 1
+    version: 0
+    orgId: 1
+    folderId: 0
+    overwrite: false
+    dashboard:
+      id: null
+      title: 'Default Dashboard'
+      originalTitle: 'Default Dashboard'
+      tags: []
+      style: 'dark'
+      timezone: 'browser'
+      editable: true
+      hideControls: false
+      sharedCrosshair: false
+      rows:
+        - title: 'Metrics'
+          collapse: false
+          editable: true
+          showTitle: true
+          panels:
+            - type: graph
+              title: 'Up Status'
+              gridPos:
+                x: 0
+                y: 0
+                w: 12
+                h: 6
+              targets:
+                - expr: up{job="django"}
+                  legendFormat: 'Django Service'
+                  refId: A
+              datasource: Prometheus
+              id: 1
+              alert: {}
+              fieldConfig: {}
+              options:
+                showHeader: true
+                showLegend: true
+                transparent: false
+      schemaVersion: 26
+      version: 1
+      links: []

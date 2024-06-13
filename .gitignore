@@ -1,0 +1,36 @@
+# .gitignore
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+env/
+python_env/
+vs_code_python/
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media
+
+# Environment Variables
+.env
+
+# VSCode
+.vscode/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Ignore the entire virtualenv
+env/
